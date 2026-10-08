@@ -20,7 +20,7 @@ impl Calibration {
     pub const TEMP_MIN: f64 = 0.5;
 
     /// Highest temperature that will be applied.
-    pub const TEMP_MAX: f64 = 5.0;
+    pub const TEMP_MAX: f64 = 4.0;
 
     /// A usable temperature: confined to [`Self::TEMP_MIN`]..[`Self::TEMP_MAX`], with anything
     /// that is not a finite number falling back to 1.0.
