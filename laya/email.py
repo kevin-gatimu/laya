@@ -253,7 +253,7 @@ def clean_email_body(body: str, max_chars: int = 3000) -> str:
             if _ATTRIBUTION_HEAD.match(lines[-1]):
                 lines.pop()
             break
-        if line.lstrip().startswith(">"):
+        if line.lstrip().startswith("\u00bb"):
             continue
         lines.append(line.rstrip())
     cut = len(lines)
