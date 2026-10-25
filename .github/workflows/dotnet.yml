@@ -81,7 +81,7 @@ jobs:
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         continue-on-error: true
         with:
-          global-json-file: laya-dotnet/global.json
+          dotnet-version: 10.0.999  # SIMULATED OUTAGE
       - name: Wait before retrying the .NET SDK download
         if: ${{ steps.setup_dotnet.outcome == 'failure' }}
         run: sleep 60
@@ -90,7 +90,7 @@ jobs:
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         continue-on-error: true
         with:
-          global-json-file: laya-dotnet/global.json
+          dotnet-version: 10.0.998  # SIMULATED OUTAGE
       - name: Fall back to the runner's .NET 10 SDK
         if: ${{ steps.setup_dotnet.outcome == 'failure' && steps.setup_dotnet_retry.outcome == 'failure' }}
         working-directory: laya-dotnet
@@ -325,7 +325,7 @@ jobs:
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         continue-on-error: true
         with:
-          global-json-file: laya-dotnet/global.json
+          dotnet-version: 10.0.999  # SIMULATED OUTAGE
       - name: Wait before retrying the .NET SDK download
         if: ${{ steps.setup_dotnet.outcome == 'failure' }}
         run: sleep 60
