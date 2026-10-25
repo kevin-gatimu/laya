@@ -44,14 +44,16 @@ public sealed partial class PredictParityTests(AllEnginesFixture fixture)
         select new object[] { c, info };
 
     /// <summary>
-    /// The same cases as <see cref="AllSuccessCases"/>, for the split ONNX layout. The golden
-    /// answers are recorded once per checkpoint (not once per layout), so the same expected
-    /// values apply: the split graph is mathematically the fused graph cut in two, not a
-    /// different model. Skips per-checkpoint at run time via <see cref="AllEnginesFixture.RequireSplit"/>
+    /// The <see cref="SplitLayoutSubset"/> of <see cref="AllSuccessCases"/>, for the split ONNX
+    /// layout. The golden answers are recorded once per checkpoint (not once per layout), so the
+    /// same expected values apply: the split graph is mathematically the fused graph cut in two,
+    /// not a different model. Cases outside the subset are not listed at all (never skipped).
+    /// Skips per-checkpoint at run time via <see cref="AllEnginesFixture.RequireSplit"/>
     /// when <c>&lt;repo&gt;/onnx-split/&lt;checkpoint&gt;</c> is absent, exactly like the fused
     /// theories below skip when <c>onnx/&lt;checkpoint&gt;</c> is absent.
     /// </summary>
-    public static IEnumerable<object[]> AllSuccessCasesSplit() => AllSuccessCases();
+    public static IEnumerable<object[]> AllSuccessCasesSplit() =>
+        AllSuccessCases().Where(values => SplitLayoutSubset.Contains((GoldenCaseInfo)values[1]));
 
     /// <summary>Structured score levels whose legend must retain the exact rendered JSON text.</summary>
     public static IEnumerable<object[]> StructuredScoreCases() =>
@@ -63,8 +65,8 @@ public sealed partial class PredictParityTests(AllEnginesFixture fixture)
     [MemberData(nameof(StructuredScoreCases))]
     public void StructuredScoreLegendsAreRenderedText(LayaCheckpoint checkpoint, GoldenCaseInfo info)
     {
+        // Fused only: rendered legend text does not depend on the artifact layout.
         ReproducesTheRecordedAnswers(checkpoint, info);
-        ReproducesTheRecordedAnswersSplit(checkpoint, info);
     }
 
     [Theory]

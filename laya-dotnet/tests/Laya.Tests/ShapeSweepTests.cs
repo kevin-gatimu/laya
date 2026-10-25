@@ -168,7 +168,16 @@ public sealed class ShapeSweepTests(AllEnginesFixture fixture)
     // ── split-layout shape test ────────────────────────────────────────────────
 
     /// <summary>
-    /// Same shape combinations as <see cref="CheckpointShapes"/>, but reading each checkpoint's
+    /// Sequence lengths swept on the split layout (see <see cref="SplitLayoutSubset"/> for why the
+    /// split layout replays a subset): the shortest, the multilingual traced length of 93 and its
+    /// neighbour, and the checkpoint's <c>MaxLen</c>. That keeps both ends of each dynamic axis and
+    /// the traced-shape boundary; the lengths in between exercise nothing the split graphs add.
+    /// </summary>
+    public static readonly int[] SplitSequenceLengths = [16, 93, 94];
+
+    /// <summary>
+    /// The same batch sizes and marker counts as <see cref="CheckpointShapes"/> over
+    /// <see cref="SplitSequenceLengths"/> plus <c>MaxLen</c>, reading each checkpoint's
     /// <c>MaxLen</c> from the split artifact directory (<c>&lt;repo&gt;/onnx-split/&lt;checkpoint&gt;</c>)
     /// when present, since a split export could in principle carry a different
     /// <c>rl_agent_config.json</c> than its fused sibling.
@@ -192,7 +201,7 @@ public sealed class ShapeSweepTests(AllEnginesFixture fixture)
                 }
             }
 
-            var seqs = SequenceLengths.Where(s => s <= maxLen).ToList();
+            var seqs = SplitSequenceLengths.Where(s => s <= maxLen).ToList();
             if (!seqs.Contains(maxLen)) seqs.Add(maxLen);
             seqs.Sort();
 

@@ -10,6 +10,7 @@ public sealed partial class PredictParityTests
         where GoldenData.For(checkpoint).Available
         from info in GoldenData.For(checkpoint).Index.Where(i => i.Kind == "batch" && !i.ExpectsError)
         from split in new[] { false, true }
+        where !split || SplitLayoutSubset.Contains(info) // the split layout replays only the subset
         select new object[] { checkpoint, info, split };
 
     public static IEnumerable<object[]> BatchErrorCases() =>

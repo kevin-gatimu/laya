@@ -158,7 +158,8 @@ fn reproduces_the_recorded_answers() {
 
 #[test]
 fn reproduces_the_recorded_answers_for_the_split_layout() {
-    // Same golden data, same assertions as `reproduces_the_recorded_answers`, but against
+    // Same golden data, same assertions as `reproduces_the_recorded_answers` (for the cases in
+    // `common::split_subset`, which says why only those), but against
     // `<repo>/onnx-split/<ckpt>` (the layout laya-ts's exporter produces: `encoder.onnx` +
     // `head.onnx`) instead of the fused `model.onnx`. Skips per checkpoint exactly like the fused
     // test does when that checkpoint's split-layout export is not present locally — most
@@ -175,7 +176,12 @@ fn reproduces_the_recorded_answers_for_the_split_layout() {
             continue;
         }
 
-        for case in golden.success_cases() {
+        // Only the subset (see `common::split_subset`); the other cases are not listed at all.
+        for case in golden
+            .success_cases()
+            .into_iter()
+            .filter(common::split_subset::contains)
+        {
             checked_any = true;
             let root = golden.load_case(&case);
             let state = root["state"].clone();

@@ -61,7 +61,13 @@ fn checkpoint_sequence_lengths(checkpoint: LayaCheckpoint) -> Vec<usize> {
     lens
 }
 
-/// Same as [`checkpoint_sequence_lengths`], but reads `rl_agent_config.json` from the split-layout
+/// Sequence lengths swept on the split layout (see `common::split_subset` for why the split layout
+/// replays a subset): the shortest, the multilingual traced length of 93 and its neighbour, and the
+/// checkpoint's `max_len`. That keeps both ends of each dynamic axis and the traced-shape boundary;
+/// the lengths in between exercise nothing the split graphs add.
+const SPLIT_SEQUENCE_LENGTHS: [usize; 3] = [16, 93, 94];
+
+/// [`SPLIT_SEQUENCE_LENGTHS`] plus `max_len`, reading `rl_agent_config.json` from the split-layout
 /// export directory (`<repo>/onnx-split/<ckpt>`) instead of the fused one — the two exports for the
 /// same checkpoint are expected to share the same `max_len`, but this reads it from the directory
 /// actually under test rather than assuming that.
@@ -71,7 +77,7 @@ fn checkpoint_sequence_lengths_split(checkpoint: LayaCheckpoint) -> Vec<usize> {
         .map(|cfg| cfg.max_len)
         .unwrap_or(1024);
 
-    let mut lens: Vec<usize> = SEQUENCE_LENGTHS
+    let mut lens: Vec<usize> = SPLIT_SEQUENCE_LENGTHS
         .into_iter()
         .filter(|&s| s <= max_len)
         .collect();
@@ -414,7 +420,8 @@ fn runs_at_every_shape_for_all_checkpoints() {
     }
 }
 
-/// Same sweep as [`runs_at_every_shape_for_all_checkpoints`], but against each checkpoint's
+/// Same sweep as [`runs_at_every_shape_for_all_checkpoints`] over [`SPLIT_SEQUENCE_LENGTHS`] and
+/// `max_len`, but against each checkpoint's
 /// split-layout export (`<repo>/onnx-split/<ckpt>`, the layout laya-ts's exporter produces:
 /// `encoder.onnx` + `head.onnx`) instead of the fused `model.onnx`. Skips per checkpoint exactly
 /// like the fused sweep does when that checkpoint's split-layout export is not present locally.

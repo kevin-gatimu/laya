@@ -500,6 +500,7 @@ fn check_batch_case(engine: &LayaEngine, where_case: &str, root: &Value) {
 
 fn run_success_cases(
     load: fn(LayaCheckpoint) -> Option<LayaEngine>,
+    only: fn(&common::golden_data::GoldenCaseInfo) -> bool,
     label: &str,
     unavailable: &str,
 ) {
@@ -513,7 +514,7 @@ fn run_success_cases(
             eprintln!("skip: no golden data for '{}'", checkpoint.subdir());
             continue;
         }
-        for case in golden.batch_cases() {
+        for case in golden.batch_cases().into_iter().filter(only) {
             checked_any = true;
             let root = golden.load_case(&case);
             check_batch_case(
@@ -532,6 +533,7 @@ fn run_success_cases(
 fn reproduces_the_recorded_batch_predictions() {
     run_success_cases(
         engines::load,
+        common::split_subset::all,
         "",
         "no batch golden data + artifacts found for any checkpoint",
     );
@@ -539,8 +541,10 @@ fn reproduces_the_recorded_batch_predictions() {
 
 #[test]
 fn reproduces_the_recorded_batch_predictions_for_the_split_layout() {
+    // Only the subset (see `common::split_subset`); the fused test above replays every case.
     run_success_cases(
         engines::load_split,
+        common::split_subset::contains,
         " (split layout)",
         "no split-layout ONNX artifacts + batch golden data found for any checkpoint",
     );

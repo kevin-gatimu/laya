@@ -7,5 +7,6 @@ pub mod golden_data;
 pub mod hashing_embedder;
 pub mod result_compare;
 pub mod routing_golden;
+pub mod split_subset;
 pub mod stub_tokenizer;
 pub mod test_artifacts;
