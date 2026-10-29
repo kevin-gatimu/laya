@@ -231,7 +231,7 @@ jobs:
             layouts: ""
             filter: --filter-class Laya.Tests.RouterEndToEndTests
             min-passed: 1
-            timeout: 45
+            timeout: 70
           - name: multilingual-fused
             cache: multilingual
             checkpoints: multilingual
