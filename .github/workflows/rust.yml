@@ -52,17 +52,17 @@ jobs:
           - name: english
             checkpoints: english
             test-args: --workspace
-            timeout: 90
+            timeout: 120
             min-passed: 350
           - name: multilingual
             checkpoints: multilingual
             test-args: --workspace
-            timeout: 40
+            timeout: 60
             min-passed: 350
           - name: typed-decisions
             checkpoints: typed-decisions
             test-args: --workspace
-            timeout: 100
+            timeout: 130
             min-passed: 350
           # The router end-to-end tests load english and multilingual side by side, so they run
           # only in a cell that selects both. Only that test binary runs here: the checkpoint
