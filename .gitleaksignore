@@ -2,3 +2,7 @@
 # False positives: SHA-256 digests of model tokenizer files in Chinese reliability benchmark results (commit 7c8b8316)
 7c8b8316410dc391d0fb2425986ff58e76035250:research/benchmarks/zh_reliability/results/massive_alarm_2026-09-24.json:generic-api-key:53
 7c8b8316410dc391d0fb2425986ff58e76035250:research/benchmarks/zh_reliability/results/massive_alarm_2026-09-24.json:generic-api-key:54
+# False positives: SHA-256 digest of the 10-byte fixture tools/revision_fixtures/checkpoint/tokenizer/tokenizer.json in the revision probe golden
+e3915f558d916f175a33bd83a274185d091c2f5b:laya-dotnet/tests/Laya.Tests/golden/routing/revision_probe.json:generic-api-key:383
+e3915f558d916f175a33bd83a274185d091c2f5b:laya-dotnet/tests/Laya.Tests/golden/routing/revision_probe.json:generic-api-key:432
+e3915f558d916f175a33bd83a274185d091c2f5b:laya-dotnet/tests/Laya.Tests/golden/routing/revision_probe.json:generic-api-key:456
